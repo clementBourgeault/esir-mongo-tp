@@ -1,5 +1,7 @@
 package fr.esir.mongo.posts;
 
+import fr.esir.mongo.users.User;
+import fr.esir.mongo.threads.Thread;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +24,8 @@ public class Post {
   private final String title;
   
   private final String content;
+
+  private final Thread thread;
+
+  private final User user;
 }
