@@ -3,6 +3,9 @@ package fr.esir.mongo.threads;
 import fr.esir.mongo.text.TextGenerator;
 import fr.esir.mongo.users.User;
 import fr.esir.mongo.users.UserGenerator;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -40,11 +43,13 @@ public class ThreadGenerator implements Processor {
   // TODO manage post/thread/user relashionship
   private Thread generateThread() {
     User randomKnownUser = userGenerator.getRandomKnownUser();
+
     if (randomKnownUser != null) {
       String idString = Long.toString(id.getAndIncrement());
       Thread newThread = Thread.builder()
               ._id(idString)
               .title(textGenerator.generateText(1))
+              .tags(getTags())
               .build();
 
       knownThreads.put(idString, newThread);
@@ -54,6 +59,19 @@ public class ThreadGenerator implements Processor {
       log.warn("Cannot create thread, no user created yet.");
       return null;
     }
+  }
+
+  public List<String> getTags() {
+    ArrayList<String> tags = new ArrayList<>();
+    String[] allTags = {"Sport", "Politique", "Actualité", "Technologie", "Culture"};
+    int nbTags = (int)(Math.random()*allTags.length);
+    for(int i = 0; i < nbTags ; i++) {
+      int pos = (int)(Math.random()*allTags.length);
+      if (!tags.contains(allTags[pos])) {
+        tags.add(allTags[pos]);
+      }
+    }
+    return tags;
   }
 
   public Thread getRandomThread() {
